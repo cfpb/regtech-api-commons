@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["lchen-2101 <73617864+lchen-2101@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "regtech-api-commons", from = "src"}]
+# packages = [{include = "regtech-api-commons", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
