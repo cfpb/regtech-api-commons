@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "regtech-api-commons"
+version = "0.1.0"
+description = ""
+authors = ["lchen-2101 <73617864+lchen-2101@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "regtech-api-commons"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.1"
+requests = "^2.31.0"
+python-jose = "^3.3.0"
+python-keycloak = "^3.7.0"
+pydantic-settings = "^2.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
