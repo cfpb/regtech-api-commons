@@ -8,7 +8,7 @@ from fastapi import HTTPException
 
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection, exceptions as kce
 
-from src.oauth2.config import KeycloakSettings
+from .config import KeycloakSettings
 
 log = logging.getLogger(__name__)
 
