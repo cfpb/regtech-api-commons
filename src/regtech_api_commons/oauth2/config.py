@@ -7,6 +7,7 @@ from pydantic.types import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_settings.sources import DotenvType, ENV_FILE_SENTINEL
 
+
 class KeycloakSettings(BaseSettings):
     inst_conn: PostgresDsn
     inst_db_schema: str = "public"
@@ -25,7 +26,7 @@ class KeycloakSettings(BaseSettings):
     _jwt_opts_prefix: str = ""
 
     def __init__(self, _env_file: DotenvType | None = ENV_FILE_SENTINEL, _jwt_opts_prefix: str = "jwt_opts_", **data):
-        super().__init__(_env_file = _env_file, **data)
+        super().__init__(_env_file=_env_file, **data)
         self._jwt_opts_prefix = _jwt_opts_prefix
         self.set_jwt_opts()
 

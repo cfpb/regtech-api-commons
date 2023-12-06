@@ -2,6 +2,7 @@ from typing import List, Dict, Any
 from pydantic import BaseModel
 from starlette.authentication import BaseUser
 
+
 class AuthenticatedUser(BaseUser, BaseModel):
     claims: Dict[str, Any]
     name: str
