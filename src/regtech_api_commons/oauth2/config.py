@@ -5,7 +5,7 @@ from pydantic import TypeAdapter
 from pydantic.networks import HttpUrl, PostgresDsn
 from pydantic.types import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from pydantic_settings.sources import DotenvType, ENV_FILE_SENTINEL
 
 class KeycloakSettings(BaseSettings):
     inst_conn: PostgresDsn
@@ -22,11 +22,11 @@ class KeycloakSettings(BaseSettings):
     jwt_opts: Dict[str, bool | int] = {}
 
     model_config = SettingsConfigDict(extra="allow")
-    jwt_opts_prefix: str = ""
+    _jwt_opts_prefix: str = ""
 
-    def __init__(self, jwt_opts_prefix: str = "jwt_opts_", **data):
-        super().__init__(**data)
-        self.jwt_opts_prefix = jwt_opts_prefix
+    def __init__(self, _env_file: DotenvType | None = ENV_FILE_SENTINEL, _jwt_opts_prefix: str = "jwt_opts_", **data):
+        super().__init__(_env_file = _env_file, **data)
+        self._jwt_opts_prefix = _jwt_opts_prefix
         self.set_jwt_opts()
 
     def set_jwt_opts(self) -> None:
@@ -48,7 +48,7 @@ class KeycloakSettings(BaseSettings):
 
     def parse_jwt_vars(self, type_adapter: TypeAdapter, setting_variables: Dict[str, Any]) -> Dict[str, bool | int]:
         return {
-            key.lower().replace(self.jwt_opts_prefix, ""): type_adapter.validate_python(value)
+            key.lower().replace(self._jwt_opts_prefix, ""): type_adapter.validate_python(value)
             for (key, value) in setting_variables
-            if key.lower().startswith(self.jwt_opts_prefix)
+            if key.lower().startswith(self._jwt_opts_prefix)
         }
