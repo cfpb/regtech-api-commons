@@ -2,15 +2,13 @@ import os
 from typing import Dict, Any
 
 from pydantic import TypeAdapter
-from pydantic.networks import HttpUrl, PostgresDsn
+from pydantic.networks import HttpUrl
 from pydantic.types import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_settings.sources import DotenvType, ENV_FILE_SENTINEL
 
 
 class KeycloakSettings(BaseSettings):
-    inst_conn: PostgresDsn
-    inst_db_schema: str = "public"
     auth_client: str
     auth_url: HttpUrl
     token_url: HttpUrl
