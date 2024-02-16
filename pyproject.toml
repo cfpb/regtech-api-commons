@@ -28,7 +28,7 @@ httpx = "^0.24.1"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-pythonpath = ["src/regtech_api_commons"]
+pythonpath = ["src"]
 addopts = [
   "--cov-report=term-missing",
   "--cov-branch",
