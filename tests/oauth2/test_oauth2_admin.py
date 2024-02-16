@@ -100,7 +100,7 @@ def test_assocaite_to_lei(mocker):
 
 def test_assocaite_to_leis(mocker):
     user_id = ("test-id",)
-    leis = Set["TESTLEI1", "TESTLEI2", "TESTLEI3"]
+    leis = Set["TESTLEI1", "TESTLEI2", "TESTLEI3"]  # noqa: F821
 
     mock_associate_to_lei = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_lei")
     mock_associate_to_lei.return_value = None
