@@ -1,10 +1,13 @@
+import pytest
 from collections.abc import Set
 from unittest.mock import patch
+from regtech_api_commons.oauth2.config import KeycloakSettings
 from regtech_api_commons.oauth2.oauth2_admin import OAuth2Admin
 import jose.jwt
+from keycloak import exceptions as kce
 
-from conftest import kc_settings
 
+kc_settings = KeycloakSettings()
 oauth2_admin = OAuth2Admin(kc_settings)
 
 
@@ -33,9 +36,9 @@ def test_get_claims():
         assert actual_result == expected_result
 
 
-def test_update_user(mocker):
+def test_update_user_passed(mocker):
 
-    mock_update_user = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.update_user")
+    mock_update_user = mocker.patch("keycloak.KeycloakAdmin.update_user")
     mock_update_user.return_value = None
 
     res = oauth2_admin.update_user(user_id="test-user-id", payload={"Name": "Test"})
@@ -52,7 +55,7 @@ def test_upsert_group(mocker):
     lei = "TESTLEI"
     name = "Test Name"
 
-    mock_get_group = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.get_group")
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
     mock_get_group.return_value = {"id": lei, "Name": name}
 
     mock_update_group = mocker.patch("keycloak.KeycloakAdmin.update_group")
@@ -66,7 +69,7 @@ def test_get_group(mocker):
     lei = "TESTLEI"
     name = "Test Name"
 
-    mock_get_group = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.get_group")
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
     mock_get_group.return_value = {"id": lei, "Name": name}
 
     result = oauth2_admin.get_group(lei)
@@ -88,10 +91,10 @@ def test_assocaite_to_lei(mocker):
     user_id = "test-id"
     lei = "TESTLEI"
 
-    mock_get_group = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.get_group")
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
     mock_get_group.return_value = {"id": lei}
 
-    mock_associate_to_group = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_group")
+    mock_associate_to_group = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
     mock_associate_to_group.return_value = None
 
     result = oauth2_admin.associate_to_lei(user_id=user_id, lei=lei)
@@ -102,8 +105,13 @@ def test_assocaite_to_leis(mocker):
     user_id = ("test-id",)
     leis = Set["TESTLEI1", "TESTLEI2", "TESTLEI3"]  # noqa: F821
 
-    mock_associate_to_lei = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_lei")
-    mock_associate_to_lei.return_value = None
+    for lei in leis:
+
+        mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
+        mock_get_group.return_value = {"id": lei}
+
+    mock_associate_to_group = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
+    mock_associate_to_group.return_value = None
 
     result = oauth2_admin.associate_to_leis(user_id=user_id, leis=leis)
     assert result is None

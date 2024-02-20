@@ -1,13 +1,14 @@
 from fastapi.security import OAuth2AuthorizationCodeBearer
 import pytest
 from regtech_api_commons.models.auth import AuthenticatedUser
+from regtech_api_commons.oauth2.config import KeycloakSettings
 from regtech_api_commons.oauth2.oauth2_admin import OAuth2Admin
 from regtech_api_commons.oauth2.oauth2_backend import BearerTokenAuthBackend
 from starlette.authentication import AuthCredentials
 from starlette.requests import HTTPConnection
-from conftest import kc_settings
 
 
+kc_settings = KeycloakSettings()
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=kc_settings.auth_url.unicode_string(), tokenUrl=kc_settings.token_url.unicode_string()
 )
