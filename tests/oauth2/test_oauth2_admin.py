@@ -1,10 +1,8 @@
-import pytest
 from collections.abc import Set
 from unittest.mock import patch
 from regtech_api_commons.oauth2.config import KeycloakSettings
 from regtech_api_commons.oauth2.oauth2_admin import OAuth2Admin
 import jose.jwt
-from keycloak import exceptions as kce
 
 
 kc_settings = KeycloakSettings()
