@@ -103,13 +103,11 @@ def test_assocaite_to_leis(mocker):
     user_id = ("test-id",)
     leis = Set["TESTLEI1", "TESTLEI2", "TESTLEI3"]  # noqa: F821
 
+    associate_to_lei_mock = mocker.patch(
+        "regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_lei", return_value=None
+    )
+
     for lei in leis:
 
-        mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
-        mock_get_group.return_value = {"id": lei}
-
-    mock_associate_to_group = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
-    mock_associate_to_group.return_value = None
-
-    result = oauth2_admin.associate_to_leis(user_id=user_id, leis=leis)
-    assert result is None
+        oauth2_admin.associate_to_lei(user_id, lei)
+        associate_to_lei_mock.assert_called_with(user_id, lei)
