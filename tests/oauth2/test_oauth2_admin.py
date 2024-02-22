@@ -107,7 +107,7 @@ def test_assocaite_to_leis(mocker):
         "regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_lei", return_value=None
     )
 
-    for lei in leis:
+    oauth2_admin.associate_to_leis(user_id, leis)
 
-        oauth2_admin.associate_to_lei(user_id, lei)
+    for lei in leis:
         associate_to_lei_mock.assert_called_with(user_id, lei)
