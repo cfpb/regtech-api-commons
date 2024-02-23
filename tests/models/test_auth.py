@@ -1,15 +1,14 @@
 from regtech_api_commons.models import AuthenticatedUser
 
-test_claims = {
-    "name": "test",
-    "preferred_username": "test_user",
-    "email": "test@local.host",
-    "sub": "testuser123",
-    "institutions": ["/TEST1LEI", "/TEST2LEI/TEST2CHILDLEI"],
-}
 
-
-def test_correct_from_claims():
+def test_from_claims():
+    test_claims = {
+        "name": "test",
+        "preferred_username": "test_user",
+        "email": "test@local.host",
+        "sub": "testuser123",
+        "institutions": ["/TEST1LEI", "/TEST2LEI/TEST2CHILDLEI"],
+    }
     test_authenticated_user = AuthenticatedUser(
         claims=test_claims,
         name=test_claims.get("name"),
@@ -22,33 +21,34 @@ def test_correct_from_claims():
     assert AuthenticatedUser.from_claim(test_claims) == test_authenticated_user
 
 
-def test_incorrect_from_claims():
-    test_authenticated_user = AuthenticatedUser(
-        claims=test_claims,
-        name="test_user_incorrect",
-        username="test_incorrect_username",
-        email="test_incorrect@local.host",
-        id="test_incorrect_id",
-        institutions=["/incorrect_institution_1", "/incorrect_institution_2"],
-    )
+def test_parse_institutions():
+    test_claims_with_institutions = {
+        "name": "test",
+        "preferred_username": "test_user",
+        "email": "test@local.host",
+        "sub": "testuser123",
+        "institutions": ["/TEST1LEI", "/TEST2LEI/TEST2CHILDLEI"],
+    }
+    assert AuthenticatedUser.from_claim(test_claims_with_institutions).institutions == ["TEST1LEI", "TEST2CHILDLEI"]
 
-    assert AuthenticatedUser.from_claim(test_claims) != test_authenticated_user
+    test_claims_without_institutions = {
+        "name": "test",
+        "preferred_username": "test_user",
+        "email": "test@local.host",
+        "sub": "testuser123",
+    }
 
-
-def test_parse_institutions_correct():
-    assert AuthenticatedUser.parse_institutions(test_claims.get("institutions")) == ["TEST1LEI", "TEST2CHILDLEI"]
-    assert AuthenticatedUser.parse_institutions(institutions=None) == []
-
-
-def test_parse_institutions_incorrect():
-    assert AuthenticatedUser.parse_institutions(test_claims.get("institutions")) != [
-        "/TESTLEI",
-        "/TEST2LEI/TEST2CHILDLEI",
-    ]
-    assert AuthenticatedUser.parse_institutions(institutions=None) != ["TESTLEI"]
+    assert AuthenticatedUser.from_claim(test_claims_without_institutions).institutions == []
 
 
 def test_is_authenticated():
+    test_claims = {
+        "name": "test",
+        "preferred_username": "test_user",
+        "email": "test@local.host",
+        "sub": "testuser123",
+        "institutions": ["/TEST1LEI", "/TEST2LEI/TEST2CHILDLEI"],
+    }
     test_authenticated_user = AuthenticatedUser(
         claims=test_claims,
         name=test_claims.get("name"),

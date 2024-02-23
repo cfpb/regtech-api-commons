@@ -1,5 +1,5 @@
 from collections.abc import Set
-from unittest.mock import patch
+from unittest.mock import Mock
 from regtech_api_commons.oauth2.config import KeycloakSettings
 from regtech_api_commons.oauth2.oauth2_admin import OAuth2Admin
 import jose.jwt
@@ -9,29 +9,36 @@ kc_settings = KeycloakSettings()
 oauth2_admin = OAuth2Admin(kc_settings)
 
 
-def test_get_claims():
+def test_get_claims(mocker):
     token = "Test Token"
 
-    with patch.object(oauth2_admin, "_get_keys", return_value="secret"):
-        claims = {
-            "token": token,
-            "iss": kc_settings.kc_realm_url.unicode_string(),
-            "audience": kc_settings.auth_client,
-            "options": kc_settings.jwt_opts,
-        }
+    mock_resp = Mock()
+    mock_resp.status_code = 200
+    mock_resp.content = "CONTENT"
+    mock_resp.json = Mock(return_value="secret")
 
-        encoded = jose.jwt.encode(claims=claims, key=oauth2_admin._get_keys(), algorithm="HS256")
+    response = mocker.patch("requests.get")
+    response.return_value = mock_resp
 
-        expected_result = jose.jwt.decode(
-            token=encoded,
-            key=oauth2_admin._get_keys(),
-            issuer=kc_settings.kc_realm_url.unicode_string(),
-            audience=kc_settings.auth_client,
-            options=kc_settings.jwt_opts,
-        )
+    claims = {
+        "token": token,
+        "iss": kc_settings.kc_realm_url.unicode_string(),
+        "audience": kc_settings.auth_client,
+        "options": kc_settings.jwt_opts,
+    }
 
-        actual_result = oauth2_admin.get_claims(encoded)
-        assert actual_result == expected_result
+    encoded = jose.jwt.encode(claims=claims, key="secret", algorithm="HS256")
+
+    expected_result = jose.jwt.decode(
+        token=encoded,
+        key="secret",
+        issuer=kc_settings.kc_realm_url.unicode_string(),
+        audience=kc_settings.auth_client,
+        options=kc_settings.jwt_opts,
+    )
+
+    actual_result = oauth2_admin.get_claims(encoded)
+    assert actual_result == expected_result
 
 
 def test_update_user_passed(mocker):
