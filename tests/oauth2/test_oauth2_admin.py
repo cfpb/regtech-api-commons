@@ -18,8 +18,7 @@ def test_get_claims(mocker):
     mock_resp.content = "CONTENT"
     mock_resp.json = Mock(return_value=mock_key_value)
 
-    response = mocker.patch("requests.get")
-    response.return_value = mock_resp
+    mock_request = mocker.patch("requests.get", return_value=mock_resp)
 
     claims = {
         "token": token,
@@ -39,6 +38,8 @@ def test_get_claims(mocker):
     )
 
     actual_result = oauth2_admin.get_claims(encoded)
+
+    mock_request.assert_called_with(kc_settings.certs_url)
     assert actual_result == expected_result
 
 
