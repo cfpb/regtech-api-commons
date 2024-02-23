@@ -11,11 +11,12 @@ oauth2_admin = OAuth2Admin(kc_settings)
 
 def test_get_claims(mocker):
     token = "Test Token"
+    mock_key_value = "secret"
 
     mock_resp = Mock()
     mock_resp.status_code = 200
     mock_resp.content = "CONTENT"
-    mock_resp.json = Mock(return_value="secret")
+    mock_resp.json = Mock(return_value=mock_key_value)
 
     response = mocker.patch("requests.get")
     response.return_value = mock_resp
@@ -27,11 +28,11 @@ def test_get_claims(mocker):
         "options": kc_settings.jwt_opts,
     }
 
-    encoded = jose.jwt.encode(claims=claims, key="secret", algorithm="HS256")
+    encoded = jose.jwt.encode(claims=claims, key=mock_key_value, algorithm="HS256")
 
     expected_result = jose.jwt.decode(
         token=encoded,
-        key="secret",
+        key=mock_key_value,
         issuer=kc_settings.kc_realm_url.unicode_string(),
         audience=kc_settings.auth_client,
         options=kc_settings.jwt_opts,
