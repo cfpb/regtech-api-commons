@@ -43,7 +43,7 @@ def test_get_claims(mocker):
     assert actual_result == expected_result
 
 
-def test_update_user_passed(mocker):
+def test_update_user(mocker):
 
     mock_update_user = mocker.patch("keycloak.KeycloakAdmin.update_user")
     mock_update_user.return_value = None
