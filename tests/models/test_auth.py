@@ -1,4 +1,3 @@
-import pytest
 from regtech_api_commons.models import RegTechUser, AuthenticatedUser
 
 
