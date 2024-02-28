@@ -1,7 +1,8 @@
+from pytest_mock import MockerFixture
 from collections.abc import Set
 from unittest.mock import Mock
-from regtech_api_commons.oauth2.config import KeycloakSettings
-from regtech_api_commons.oauth2.oauth2_admin import OAuth2Admin
+from regtech_api_commons.models import RegTechUser
+from regtech_api_commons.oauth2 import KeycloakSettings, OAuth2Admin
 import jose.jwt
 
 
@@ -44,7 +45,6 @@ def test_get_claims(mocker):
 
 
 def test_update_user(mocker):
-
     mock_update_user = mocker.patch("keycloak.KeycloakAdmin.update_user")
     mock_update_user.return_value = None
 
@@ -70,6 +70,28 @@ def test_upsert_group(mocker):
 
     result = oauth2_admin.upsert_group(lei=lei, name=name)
     assert result == lei
+
+
+def test_get_user(mocker: MockerFixture):
+    mock_get_user = mocker.patch("keycloak.KeycloakAdmin.get_user")
+    mock_get_user.return_value = {
+        "email": "test@local.host",
+        "firstName": "test",
+        "id": "testuser123",
+        "lastName": "user",
+        "username": "user1",
+    }
+    mock_get_groups = mocker.patch("keycloak.KeycloakAdmin.get_user_groups")
+    mock_get_groups.return_value = [
+        {"id": "test-id-1", "name": "TEST1LEI", "path": "/TEST1LEI"},
+        {"id": "test-id-2", "name": "TEST2CHILDLEI", "path": "/TEST2LEI/TEST2CHILDLEI"},
+    ]
+    regtech_user = oauth2_admin.get_user("testuser123")
+    mock_get_user.assert_called_with("testuser123")
+    mock_get_groups.assert_called_with("testuser123")
+    assert regtech_user.email == "test@local.host"
+    assert regtech_user.institutions == ["TEST1LEI", "TEST2CHILDLEI"]
+    assert isinstance(regtech_user, RegTechUser)
 
 
 def test_get_group(mocker):

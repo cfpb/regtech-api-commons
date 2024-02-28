@@ -18,6 +18,27 @@ def test_from_claims():
     assert user.institutions == ["TEST1LEI", "TEST2CHILDLEI"]
 
 
+def test_from_kc():
+    kc_user = {
+        "email": "test@local.host",
+        "firstName": "test",
+        "id": "testuser123",
+        "lastName": "user",
+        "username": "user1",
+    }
+    groups = [
+        {"id": "test-id-1", "name": "TEST1LEI", "path": "/TEST1LEI"},
+        {"id": "test-id-2", "name": "TEST2CHILDLEI", "path": "/TEST2LEI/TEST2CHILDLEI"},
+    ]
+    user = RegTechUser.from_kc(kc_user, groups)
+
+    assert user.name == " ".join([kc_user.get("firstName"), kc_user.get("lastName")])
+    assert user.username == kc_user.get("username")
+    assert user.email == kc_user.get("email")
+    assert user.id == kc_user.get("id")
+    assert user.institutions == ["TEST1LEI", "TEST2CHILDLEI"]
+
+
 def test_parse_institutions():
     test_claims_with_institutions = {
         "name": "test",
