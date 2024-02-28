@@ -9,7 +9,7 @@ def test_from_claims():
         "sub": "testuser123",
         "institutions": ["/TEST1LEI", "/TEST2LEI/TEST2CHILDLEI"],
     }
-    test_authenticated_user = AuthenticatedUser(
+    expected_authenticated_user = AuthenticatedUser(
         claims=test_claims,
         name=test_claims.get("name"),
         username=test_claims.get("preferred_username"),
@@ -18,7 +18,7 @@ def test_from_claims():
         institutions=AuthenticatedUser.parse_institutions(test_claims.get("institutions")),
     )
 
-    assert AuthenticatedUser.from_claim(test_claims) == test_authenticated_user
+    assert AuthenticatedUser.from_claim(test_claims) == expected_authenticated_user
 
 
 def test_parse_institutions():
@@ -49,13 +49,5 @@ def test_is_authenticated():
         "sub": "testuser123",
         "institutions": ["/TEST1LEI", "/TEST2LEI/TEST2CHILDLEI"],
     }
-    test_authenticated_user = AuthenticatedUser(
-        claims=test_claims,
-        name=test_claims.get("name"),
-        username=test_claims.get("preferred_username"),
-        email=test_claims.get("email"),
-        id=test_claims.get("sub"),
-        institutions=AuthenticatedUser.parse_institutions(test_claims.get("institutions")),
-    )
 
-    assert test_authenticated_user.is_authenticated is True
+    assert AuthenticatedUser.from_claim(test_claims).is_authenticated is True
