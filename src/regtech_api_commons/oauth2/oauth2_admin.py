@@ -8,6 +8,8 @@ from fastapi import HTTPException
 
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection, exceptions as kce
 
+from regtech_api_commons.models import RegTechUser
+
 from .config import KeycloakSettings
 
 log = logging.getLogger(__name__)
@@ -42,6 +44,11 @@ class OAuth2Admin:
             response = requests.get(self._kc_settings.certs_url)
             self._keys = response.json()
         return self._keys
+
+    def get_user(self, user_id: str) -> RegTechUser:
+        user = self._admin.get_user(user_id)
+        groups = self._admin.get_user_groups(user_id)
+        return RegTechUser.from_kc(user, groups)
 
     def update_user(self, user_id: str, payload: Dict[str, Any]) -> None:
         try:
