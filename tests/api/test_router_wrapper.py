@@ -1,9 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
 from fastapi.testclient import TestClient
-import starlette.status as status
-
-
 from regtech_api_commons.api.router_wrapper import Router
 
 router = Router()
