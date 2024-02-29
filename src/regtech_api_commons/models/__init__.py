@@ -1,3 +1,3 @@
-__all__ = ["AuthenticatedUser"]
+__all__ = ["RegTechUser", "AuthenticatedUser"]
 
-from .auth import AuthenticatedUser
+from .auth import RegTechUser, AuthenticatedUser
