@@ -2,7 +2,7 @@
 name = "regtech-api-commons"
 version = "0.1.0"
 description = ""
-authors = ["lchen-2101 <73617864+lchen-2101@users.noreply.github.com>"]
+authors = ["CFPB's RegTech Team"]
 readme = "README.md"
 packages = [{include = "regtech_api_commons", from = "src"}]
 
