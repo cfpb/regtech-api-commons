@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "regtech_api_commons", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.12"
+python = ">=3.12,<4"
 fastapi = "^0.109.1"
 requests = "^2.31.0"
 python-jose = "^3.3.0"
