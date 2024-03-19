@@ -34,7 +34,7 @@ class OAuth2Admin:
                 key=self._get_keys(),
                 issuer=self._kc_settings.kc_realm_url.unicode_string(),
                 audience=self._kc_settings.auth_client,
-                options=self._kc_settings.jwt_opts,
+                options=self._kc_settings._jwt_opts,
             )
         except jose.ExpiredSignatureError:
             pass

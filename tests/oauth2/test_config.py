@@ -9,7 +9,7 @@ def test_jwt_opts_valid_values():
         "jwt_opts_test3": "12",
     }
     kc_settings = KeycloakSettings(**mock_config)
-    assert kc_settings.jwt_opts == {"test1": True, "test2": True, "test3": 12}
+    assert kc_settings._jwt_opts == {"test1": True, "test2": True, "test3": 12}
 
 
 def test_jwt_opts_invalid_values():
