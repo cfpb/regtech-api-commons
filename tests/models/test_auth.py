@@ -1,4 +1,4 @@
-from regtech_api_commons.models import RegTechUser, AuthenticatedUser
+from regtech_api_commons.models.auth import RegTechUser, AuthenticatedUser
 
 
 def test_from_claims():
