@@ -25,7 +25,7 @@ def test_get_claims(mocker):
         "token": token,
         "iss": kc_settings.kc_realm_url.unicode_string(),
         "audience": kc_settings.auth_client,
-        "options": kc_settings.jwt_opts,
+        "options": kc_settings._jwt_opts,
     }
 
     encoded = jose.jwt.encode(claims=claims, key=mock_key_value, algorithm="HS256")
@@ -35,7 +35,7 @@ def test_get_claims(mocker):
         key=mock_key_value,
         issuer=kc_settings.kc_realm_url.unicode_string(),
         audience=kc_settings.auth_client,
-        options=kc_settings.jwt_opts,
+        options=kc_settings._jwt_opts,
     )
 
     actual_result = oauth2_admin.get_claims(encoded)

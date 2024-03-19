@@ -18,7 +18,7 @@ class KeycloakSettings(BaseSettings):
     kc_admin_client_id: str
     kc_admin_client_secret: SecretStr
     kc_realm_url: HttpUrl
-    jwt_opts: Dict[str, bool | int] = {}
+    _jwt_opts: Dict[str, bool | int] = {}
 
     model_config = SettingsConfigDict(extra="allow")
     _jwt_opts_prefix: str = ""
@@ -40,7 +40,7 @@ class KeycloakSettings(BaseSettings):
         so we're merging settings.model_extra with environment variables.
         """
         jwt_opts_adapter = TypeAdapter(int | bool)
-        self.jwt_opts = {
+        self._jwt_opts = {
             **self.parse_jwt_vars(jwt_opts_adapter, self.model_extra.items()),
             **self.parse_jwt_vars(jwt_opts_adapter, os.environ.items()),
         }
