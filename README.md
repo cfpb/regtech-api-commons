@@ -4,17 +4,14 @@
 
 | Name                                                |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
 |---------------------------------------------------- | -------: | -------: | -------: | -------: | ------: | --------: |
-| src/regtech\_api\_commons/api/\_\_init\_\_.py       |        2 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/api/router\_wrapper.py    |       13 |        1 |        2 |        1 |     87% |        12 |
-| src/regtech\_api\_commons/models/\_\_init\_\_.py    |        2 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/models/auth.py            |       24 |        0 |       10 |        0 |    100% |           |
-| src/regtech\_api\_commons/oauth2/\_\_init\_\_.py    |        4 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/config.py          |       29 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/oauth2\_admin.py   |       66 |       15 |        8 |        3 |     76% |39-40, 43->46, 56-58, 65, 69-71, 76-77, 82-84, 91 |
 | src/regtech\_api\_commons/oauth2/oauth2\_backend.py |       31 |        0 |        4 |        1 |     97% |    29->38 |
-|                                           **TOTAL** |  **171** |   **16** |   **24** |    **5** | **89%** |           |
+|                                           **TOTAL** |  **163** |   **16** |   **24** |    **5** | **89%** |           |
 
-1 empty file skipped.
+4 empty files skipped.
 
 
 ## Setup coverage badge
