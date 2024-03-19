@@ -10,9 +10,9 @@ from starlette.authentication import (
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from starlette.requests import HTTPConnection
 
-from ..models.auth import AuthenticatedUser
+from regtech_api_commons.models.auth import AuthenticatedUser
 
-from .oauth2_admin import OAuth2Admin
+from regtech_api_commons.oauth2.oauth2_admin import OAuth2Admin
 
 log = logging.getLogger(__name__)
 
