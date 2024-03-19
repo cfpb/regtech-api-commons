@@ -8,9 +8,9 @@ from fastapi import HTTPException
 
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection, exceptions as kce
 
-from regtech_api_commons.models import RegTechUser
+from regtech_api_commons.models.auth import RegTechUser
 
-from .config import KeycloakSettings
+from regtech_api_commons.oauth2.config import KeycloakSettings
 
 log = logging.getLogger(__name__)
 

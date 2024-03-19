@@ -27,7 +27,6 @@ claims = {
 
 
 def test_oauth2_extract_nested_with_correct_keys():
-
     assert bearer_token.extract_nested(claims, "resource_access", "account", "roles") == [
         "manage-account",
         "manage-account-links",
@@ -36,13 +35,11 @@ def test_oauth2_extract_nested_with_correct_keys():
 
 
 def test_oauth2_extract_nested_without_incorrect_keys():
-
     assert bearer_token.extract_nested(claims, "incorrect_key") == []
 
 
 @pytest.mark.asyncio
 async def test_oauth2_authenticate_with_claims(mocker):
-
     mock_token_bearer = mocker.patch("fastapi.security.OAuth2AuthorizationCodeBearer.__call__")
 
     async def return_token_bearer_value(val):
@@ -71,7 +68,6 @@ async def test_oauth2_authenticate_with_claims(mocker):
 
 @pytest.mark.asyncio
 async def test_oauth2_authenticate_without_claims(mocker):
-
     scope = {
         "method": "GET",
         "type": "http",

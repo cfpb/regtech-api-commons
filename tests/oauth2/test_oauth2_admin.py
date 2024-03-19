@@ -1,8 +1,8 @@
 from pytest_mock import MockerFixture
 from collections.abc import Set
 from unittest.mock import Mock
-from regtech_api_commons.models import RegTechUser
-from regtech_api_commons.oauth2 import KeycloakSettings, OAuth2Admin
+from regtech_api_commons.models.auth import RegTechUser
+from regtech_api_commons.oauth2.oauth2_admin import KeycloakSettings, OAuth2Admin
 import jose.jwt
 
 
