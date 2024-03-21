@@ -145,7 +145,6 @@ def test_associate_to_lei_not_seeded(mocker):
 
     oauth2_admin.associate_to_lei(user_id=user_id, lei=lei)
     mock_create_group.assert_called_with({"name": lei})
-    
 
 
 def test_associate_to_leis(mocker):
