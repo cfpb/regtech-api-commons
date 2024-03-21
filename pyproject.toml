@@ -43,17 +43,6 @@ addopts = [
   "-rfE",
 ]
 testpaths = ["tests"]
-env = [
-  "KC_URL=http://localhost",
-  "KC_REALM=",
-  "KC_ADMIN_CLIENT_ID=",
-  "KC_ADMIN_CLIENT_SECRET=",
-  "KC_REALM_URL=http://localhost",
-  "AUTH_URL=http://localhost",
-  "TOKEN_URL=http://localhost",
-  "CERTS_URL=http://localhost",
-  "AUTH_CLIENT=",
-]
 
 [tool.black]
 line-length = 120

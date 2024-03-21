@@ -8,7 +8,17 @@ from starlette.authentication import AuthCredentials
 from starlette.requests import HTTPConnection
 
 
-kc_settings = KeycloakSettings()
+kc_settings = KeycloakSettings(**{
+    "kc_url": "http://localhost",
+    "kc_realm": "",
+    "kc_admin_client_id": "",
+    "kc_admin_client_secret": "",
+    "kc_realm_url": "http://localhost",
+    "auth_url": "http://localhost",
+    "token_url": "http://localhost",
+    "certs_url": "http://localhost",
+    "auth_client": "",
+})
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=kc_settings.auth_url.unicode_string(), tokenUrl=kc_settings.token_url.unicode_string()
 )
