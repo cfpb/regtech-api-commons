@@ -105,7 +105,7 @@ def test_get_group(mocker):
     assert result["Name"] == name
 
 
-def test_assocaite_to_group(mocker):
+def test_associate_to_group(mocker):
     user_id = "test-id"
     group_id = "group-id"
 
@@ -116,7 +116,7 @@ def test_assocaite_to_group(mocker):
     assert result is None
 
 
-def test_assocaite_to_lei(mocker):
+def test_associate_to_lei(mocker):
     user_id = "test-id"
     lei = "TESTLEI"
 
@@ -130,7 +130,25 @@ def test_assocaite_to_lei(mocker):
     assert result is None
 
 
-def test_assocaite_to_leis(mocker):
+def test_associate_to_lei_not_seeded(mocker):
+    user_id = "test-id"
+    lei = "TESTLEI"
+
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
+    mock_get_group.return_value = None
+
+    mock_associate_to_group = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
+    mock_associate_to_group.return_value = None
+
+    mock_create_group = mocker.patch("keycloak.KeycloakAdmin.create_group")
+    mock_create_group.return_value = "test"
+
+    oauth2_admin.associate_to_lei(user_id=user_id, lei=lei)
+    mock_create_group.assert_called_with({"name": lei})
+    
+
+
+def test_associate_to_leis(mocker):
     user_id = ("test-id",)
     leis = Set["TESTLEI1", "TESTLEI2", "TESTLEI3"]  # noqa: F821
 
