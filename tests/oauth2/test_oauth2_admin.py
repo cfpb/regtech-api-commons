@@ -5,17 +5,19 @@ from regtech_api_commons.models.auth import RegTechUser
 from regtech_api_commons.oauth2.oauth2_admin import KeycloakSettings, OAuth2Admin
 import jose.jwt
 
-kc_settings = KeycloakSettings(**{
-    "kc_url": "http://localhost",
-    "kc_realm": "",
-    "kc_admin_client_id": "",
-    "kc_admin_client_secret": "",
-    "kc_realm_url": "http://localhost",
-    "auth_url": "http://localhost",
-    "token_url": "http://localhost",
-    "certs_url": "http://localhost",
-    "auth_client": "",
-})
+kc_settings = KeycloakSettings(
+    **{
+        "kc_url": "http://localhost",
+        "kc_realm": "",
+        "kc_admin_client_id": "",
+        "kc_admin_client_secret": "",
+        "kc_realm_url": "http://localhost",
+        "auth_url": "http://localhost",
+        "token_url": "http://localhost",
+        "certs_url": "http://localhost",
+        "auth_client": "",
+    }
+)
 oauth2_admin = OAuth2Admin(kc_settings)
 
 
