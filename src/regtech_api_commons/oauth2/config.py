@@ -9,15 +9,15 @@ from pydantic_settings.sources import DotenvType, ENV_FILE_SENTINEL
 
 
 class KeycloakSettings(BaseSettings):
-    auth_client: str
-    auth_url: HttpUrl
-    token_url: HttpUrl
-    certs_url: HttpUrl
-    kc_url: HttpUrl
-    kc_realm: str
-    kc_admin_client_id: str
-    kc_admin_client_secret: SecretStr
-    kc_realm_url: HttpUrl
+    auth_client: str | None
+    auth_url: HttpUrl | None
+    token_url: HttpUrl | None
+    certs_url: HttpUrl | None
+    kc_url: HttpUrl | None
+    kc_realm: str | None
+    kc_admin_client_id: str | None
+    kc_admin_client_secret: SecretStr | None
+    kc_realm_url: HttpUrl | None
     _jwt_opts: Dict[str, bool | int] = {}
 
     model_config = SettingsConfigDict(extra="allow")

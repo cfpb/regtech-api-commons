@@ -59,7 +59,7 @@ class OAuth2Admin:
 
     def upsert_group(self, lei: str, name: str) -> str:
         try:
-            group_payload = {"name": lei, "attributes": {"fi_name": [name]}}
+            group_payload = {"name": lei}
             group = self.get_group(lei)
             if group is None:
                 return self._admin.create_group(group_payload)
@@ -85,8 +85,9 @@ class OAuth2Admin:
 
     def associate_to_lei(self, user_id: str, lei: str) -> None:
         group = self.get_group(lei)
-        if group is not None:
-            self.associate_to_group(user_id, group["id"])
+        group_id = group["id"] if group else self._admin.create_group({"name": lei})
+        if group_id:
+            self.associate_to_group(user_id, group_id)
         else:
             raise HTTPException(
                 status_code=HTTPStatus.BAD_REQUEST,
