@@ -21,3 +21,7 @@ def test_jwt_opts_invalid_values():
     with pytest.raises(Exception) as e:
         KeycloakSettings(**mock_config)
     assert "validation error" in str(e.value)
+
+
+def test_all_envs_optional():
+    KeycloakSettings()
