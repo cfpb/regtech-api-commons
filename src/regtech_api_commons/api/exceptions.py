@@ -1,6 +1,6 @@
-from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi import HTTPException
 
-class RegTechHttpException(StarletteHTTPException):
+class RegTechHttpException(HTTPException):
     name: str | None
 
     def __init__(self, status_code: int, name: str | None = None, detail: str | None = None, headers: dict[str, str] | None = None) -> None:
