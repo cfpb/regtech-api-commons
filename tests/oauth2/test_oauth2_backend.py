@@ -37,6 +37,21 @@ claims = {
     "resource_access": {"account": {"roles": ["manage-account", "manage-account-links", "view-profile"]}},
 }
 
+@pytest.mark.asyncio
+async def test_empty_token(mocker):
+    mock_token_bearer = mocker.patch("fastapi.security.OAuth2AuthorizationCodeBearer.__call__")
+    mock_token_bearer.return_value = None
+    
+    scope = {
+        "method": "GET",
+        "type": "http",
+        "headers": [("host", "localhost"), ("accept", "application/json")],
+    }
+    
+    response = await bearer_token.authenticate(HTTPConnection(scope=scope))
+    assert response[0].scopes == AuthCredentials("unauthenticated").scopes
+    assert response[1].is_authenticated is False
+    
 
 def test_oauth2_extract_nested_with_correct_keys():
     assert bearer_token.extract_nested(claims, "resource_access", "account", "roles") == [
