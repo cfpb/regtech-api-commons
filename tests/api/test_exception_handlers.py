@@ -1,7 +1,6 @@
 from http import HTTPStatus
 import json
 from typing import Dict
-from unittest.mock import ANY
 
 from fastapi import Request
 import pytest
