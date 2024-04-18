@@ -54,6 +54,7 @@ async def test_request_validation_error_handler(mock_request: Request):
     assert content[ERROR_NAME] == "Request Validation Failure"
     assert content[ERROR_DETAIL] == errors
 
+
 async def test_general_http_exception_handler(mock_request: Request):
     e = HTTPException(HTTPStatus.NOT_FOUND, {"error1": "test1"})
     response = await http_exception_handler(mock_request, e)
@@ -61,12 +62,14 @@ async def test_general_http_exception_handler(mock_request: Request):
     assert content[ERROR_NAME] == HTTPStatus.NOT_FOUND.phrase
     assert content[ERROR_DETAIL] == {"error1": "test1"}
 
+
 async def test_general_http_exception_handler_with_starlette_error(mock_request: Request):
     e = StarletteHTTPException(HTTPStatus.FORBIDDEN, "test error")
     response = await http_exception_handler(mock_request, e)
     content = json.loads(response.body)
     assert content[ERROR_NAME] == HTTPStatus.FORBIDDEN.phrase
     assert content[ERROR_DETAIL] == "test error"
+
 
 async def test_general_exception_handler(mock_request: Request):
     e = RuntimeError("test runtime error")

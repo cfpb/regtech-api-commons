@@ -29,6 +29,7 @@ async def request_validation_error_handler(request: Request, exception: RequestV
         content={ERROR_NAME: "Request Validation Failure", ERROR_DETAIL: jsonable_encoder(exception.errors())},
     )
 
+
 async def http_exception_handler(request: Request, exception: HTTPException) -> JSONResponse:
     log.error(exception, exc_info=True, stack_info=True)
     status = HTTPStatus(exception.status_code)
@@ -36,6 +37,7 @@ async def http_exception_handler(request: Request, exception: HTTPException) -> 
         status_code=exception.status_code,
         content={ERROR_NAME: status.phrase, ERROR_DETAIL: jsonable_encoder(exception.detail)},
     )
+
 
 async def general_exception_handler(request: Request, exception: Exception) -> JSONResponse:
     log.error(exception, exc_info=True, stack_info=True)
