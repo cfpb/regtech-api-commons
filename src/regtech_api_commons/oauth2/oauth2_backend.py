@@ -24,6 +24,7 @@ class BearerTokenAuthBackend(AuthenticationBackend):
 
     async def authenticate(self, conn: HTTPConnection) -> Coroutine[Any, Any, Tuple[AuthCredentials, BaseUser] | None]:
         try:
+            log.error(f"Connection to OAuth2_backend {conn}")
             token = await self.token_bearer(conn)
             if not token:
                 return AuthCredentials("unauthenticated"), UnauthenticatedUser()
