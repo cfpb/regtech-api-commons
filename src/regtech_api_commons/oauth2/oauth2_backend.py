@@ -37,7 +37,7 @@ class BearerTokenAuthBackend(AuthenticationBackend):
                 )
                 return AuthCredentials(auths), AuthenticatedUser.from_claim(claims)
         except HTTPException as e:
-            log.exception("failed to get claims", e, exc_info=True, stack_info=True)
+            log.error("failed to get claims", e, exc_info=True, stack_info=True)
         return AuthCredentials("unauthenticated"), UnauthenticatedUser()
 
     def extract_nested(self, data: Dict[str, Any], *keys: str) -> List[str]:
