@@ -1,6 +1,5 @@
 from http import HTTPStatus
 import logging
-from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from starlette.responses import JSONResponse
 from starlette.requests import Request
@@ -18,7 +17,7 @@ async def regtech_http_exception_handler(request: Request, exception: RegTechHtt
     log.error(exception, exc_info=True, stack_info=True)
     return JSONResponse(
         status_code=exception.status_code,
-        content={ERROR_NAME: exception.name, ERROR_DETAIL: jsonable_encoder(exception.detail)},
+        content={ERROR_NAME: exception.name, ERROR_DETAIL: str(exception.detail)},
     )
 
 
@@ -26,7 +25,7 @@ async def request_validation_error_handler(request: Request, exception: RequestV
     log.warn(exception, exc_info=True, stack_info=True)
     return JSONResponse(
         status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
-        content={ERROR_NAME: "Request Validation Failure", ERROR_DETAIL: jsonable_encoder(exception.errors())},
+        content={ERROR_NAME: "Request Validation Failure", ERROR_DETAIL: str(exception.errors())},
     )
 
 
@@ -35,7 +34,7 @@ async def http_exception_handler(request: Request, exception: HTTPException) -> 
     status = HTTPStatus(exception.status_code)
     return JSONResponse(
         status_code=exception.status_code,
-        content={ERROR_NAME: status.phrase, ERROR_DETAIL: jsonable_encoder(exception.detail)},
+        content={ERROR_NAME: status.phrase, ERROR_DETAIL: str(exception.detail)},
     )
 
 
