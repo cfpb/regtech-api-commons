@@ -46,7 +46,7 @@ async def test_empty_token(mocker):
     scope = {
         "method": "GET",
         "type": "http",
-        "headers": [("host", "localhost"), ("accept", "application/json")],
+        "headers": [(b"host", b"localhost"), (b"accept", b"application/json"), (b"authorization", b"")],
     }
 
     response = await bearer_token.authenticate(HTTPConnection(scope=scope))
@@ -82,7 +82,7 @@ async def test_oauth2_authenticate_with_claims(mocker):
     scope = {
         "method": "GET",
         "type": "http",
-        "headers": [("host", "localhost"), ("accept", "application/json")],
+        "headers": [(b"host", b"localhost"), (b"accept", b"application/json"), (b"authorization", b"test")],
     }
 
     response = await bearer_token.authenticate(HTTPConnection(scope=scope))
@@ -99,7 +99,7 @@ async def test_oauth2_authenticate_without_claims(mocker):
     scope = {
         "method": "GET",
         "type": "http",
-        "headers": [("host", "localhost"), ("accept", "application/json")],
+        "headers": [(b"host", b"localhost"), (b"accept", b"application/json")],
     }
 
     response = await bearer_token.authenticate(HTTPConnection(scope=scope))
