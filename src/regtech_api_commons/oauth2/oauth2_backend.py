@@ -24,6 +24,8 @@ class BearerTokenAuthBackend(AuthenticationBackend):
 
     async def authenticate(self, conn: HTTPConnection) -> Coroutine[Any, Any, Tuple[AuthCredentials, BaseUser] | None]:
         try:
+            if not conn.headers.get("Authorization"):
+                return AuthCredentials("unauthenticated"), UnauthenticatedUser()
             token = await self.token_bearer(conn)
             if not token:
                 return AuthCredentials("unauthenticated"), UnauthenticatedUser()
@@ -35,8 +37,8 @@ class BearerTokenAuthBackend(AuthenticationBackend):
                     + ["authenticated"]
                 )
                 return AuthCredentials(auths), AuthenticatedUser.from_claim(claims)
-        except HTTPException:
-            log.exception("failed to get claims")
+        except HTTPException as e:
+            log.error("failed to get claims", e, exc_info=True, stack_info=True)
         return AuthCredentials("unauthenticated"), UnauthenticatedUser()
 
     def extract_nested(self, data: Dict[str, Any], *keys: str) -> List[str]:
