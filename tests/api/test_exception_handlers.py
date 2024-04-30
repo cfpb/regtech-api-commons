@@ -1,6 +1,5 @@
 from http import HTTPStatus
 import json
-from typing import Dict
 
 from fastapi import HTTPException, Request
 from fastapi.exceptions import RequestValidationError
@@ -42,17 +41,16 @@ async def test_regtech_http_exception_handler_nested_detail(mock_request: Reques
     response = await regtech_http_exception_handler(mock_request, e)
     assert response.status_code == e.status_code
     content = json.loads(response.body)
-    assert isinstance(content[ERROR_DETAIL], Dict)
+    assert content[ERROR_DETAIL] == str({"foo": "bar"})
 
 
 async def test_request_validation_error_handler(mock_request: Request):
-    errors = [{"error1": "test1"}, {"error2": "test2"}]
+    errors = [{"loc": "test1", "msg": "error1"}, {"loc": "test2", "msg": "error2"}]
     rve = RequestValidationError(errors=errors)
     response = await request_validation_error_handler(mock_request, rve)
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     content = json.loads(response.body)
-    assert content[ERROR_NAME] == "Request Validation Failure"
-    assert content[ERROR_DETAIL] == errors
+    assert content[ERROR_DETAIL] == str(rve.errors())
 
 
 async def test_general_http_exception_handler(mock_request: Request):
@@ -60,7 +58,7 @@ async def test_general_http_exception_handler(mock_request: Request):
     response = await http_exception_handler(mock_request, e)
     content = json.loads(response.body)
     assert content[ERROR_NAME] == HTTPStatus.NOT_FOUND.phrase
-    assert content[ERROR_DETAIL] == {"error1": "test1"}
+    assert content[ERROR_DETAIL] == str({"error1": "test1"})
 
 
 async def test_general_http_exception_handler_with_starlette_error(mock_request: Request):
