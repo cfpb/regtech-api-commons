@@ -10,8 +10,8 @@
 | src/regtech\_api\_commons/models/auth.py             |       24 |        0 |       10 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/config.py           |       29 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/oauth2\_admin.py    |       67 |       15 |        8 |        3 |     76% |39-40, 43->46, 56-58, 65, 69-71, 76-77, 82-84, 92 |
-| src/regtech\_api\_commons/oauth2/oauth2\_backend.py  |       33 |        0 |        6 |        1 |     97% |    31->40 |
-|                                            **TOTAL** |  **197** |   **16** |   **26** |    **5** | **91%** |           |
+| src/regtech\_api\_commons/oauth2/oauth2\_backend.py  |       35 |        4 |        8 |        2 |     86% | 31, 40-42 |
+|                                            **TOTAL** |  **199** |   **20** |   **28** |    **6** | **89%** |           |
 
 4 empty files skipped.
 
