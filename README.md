@@ -4,14 +4,14 @@
 
 | Name                                                 |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
 |----------------------------------------------------- | -------: | -------: | -------: | -------: | ------: | --------: |
-| src/regtech\_api\_commons/api/exception\_handlers.py |       24 |        0 |        0 |        0 |    100% |           |
+| src/regtech\_api\_commons/api/exception\_handlers.py |       23 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/api/exceptions.py          |        7 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/api/router\_wrapper.py     |       13 |        1 |        2 |        1 |     87% |        12 |
 | src/regtech\_api\_commons/models/auth.py             |       24 |        0 |       10 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/config.py           |       29 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/oauth2\_admin.py    |       67 |       15 |        8 |        3 |     76% |39-40, 43->46, 56-58, 65, 69-71, 76-77, 82-84, 92 |
 | src/regtech\_api\_commons/oauth2/oauth2\_backend.py  |       35 |        4 |        8 |        2 |     86% | 31, 40-42 |
-|                                            **TOTAL** |  **199** |   **20** |   **28** |    **6** | **89%** |           |
+|                                            **TOTAL** |  **198** |   **20** |   **28** |    **6** | **88%** |           |
 
 4 empty files skipped.
 
