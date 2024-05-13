@@ -8,9 +8,7 @@ from fastapi.exceptions import HTTPException
 from pytest_mock import MockerFixture
 from starlette.authentication import AuthCredentials
 
-from regtech_api_commons.api.dependencies import (verify_institution_search,
-                                                  verify_lei,
-                                                  verify_user_lei_relation)
+from regtech_api_commons.api.dependencies import verify_institution_search, verify_lei, verify_user_lei_relation
 from regtech_api_commons.api.exceptions import RegTechHttpException
 from regtech_api_commons.models.auth import AuthenticatedUser
 
