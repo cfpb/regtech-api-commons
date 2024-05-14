@@ -26,13 +26,17 @@ def verify_user_lei_relation(request: Request, *args, **kwargs) -> None:
     if lei := kwargs.get("lei"):
         user: AuthenticatedUser = request.user
         auth: AuthCredentials = request.auth
-        if not is_admin(auth):
-            if lei not in user.institutions:
-                raise RegTechHttpException(
-                    status_code=HTTPStatus.FORBIDDEN,
-                    name="Request Forbidden",
-                    detail=f"LEI {lei} is not associated with the user.",
-                )
+        detail = "Unauthenticated Request Forbidden."
+        if user.is_authenticated:
+            if is_admin(auth) or lei in user.institutions:
+                return
+            else:
+                detail=f"LEI {lei} is not associated with the user."
+        raise RegTechHttpException(
+            status_code=HTTPStatus.FORBIDDEN,
+            name="Request Forbidden",
+            detail=detail,
+        )
 
 
 def is_admin(auth: AuthCredentials):
@@ -66,16 +70,22 @@ def verify_domain_search(user: AuthenticatedUser, domain: str) -> None:
 def verify_institution_search(request: Request, *args, **kwargs) -> None:
     user: AuthenticatedUser = request.user
     auth: AuthCredentials = request.auth
-    if not is_admin(auth):
+    detail = "Unauthenticated Request Forbidden."
+    if user.is_authenticated:
+        if is_admin(auth):
+            return
         leis = kwargs.get("leis")
         domain = kwargs.get("domain")
         if leis:
             verify_lei_search(user, leis)
+            return
         elif domain:
             verify_domain_search(user, domain)
+            return
         elif not leis and not domain:
-            raise RegTechHttpException(
-                HTTPStatus.FORBIDDEN,
-                name="Request Forbidden",
-                detail="Retrieving institutions without filter is forbidden.",
-            )
+            detail = "Retrieving institutions without filter is forbidden."
+    raise RegTechHttpException(
+        HTTPStatus.FORBIDDEN,
+        name="Request Forbidden",
+        detail=detail,
+    )

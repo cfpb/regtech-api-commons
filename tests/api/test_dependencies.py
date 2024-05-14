@@ -6,7 +6,7 @@ import pytest
 from fastapi import Request
 from fastapi.exceptions import HTTPException
 from pytest_mock import MockerFixture
-from starlette.authentication import AuthCredentials
+from starlette.authentication import AuthCredentials, UnauthenticatedUser, BaseUser
 
 from regtech_api_commons.api.dependencies import verify_institution_search, verify_lei, verify_user_lei_relation
 from regtech_api_commons.api.exceptions import RegTechHttpException
@@ -36,6 +36,10 @@ def admin_context() -> Tuple[AuthCredentials, AuthenticatedUser]:
             "sub": "adminuser123",
         }
     )
+
+@pytest.fixture
+def unauthed_context() -> Tuple[AuthCredentials, BaseUser]:
+    return AuthCredentials("unauthenticated"), UnauthenticatedUser()
 
 
 def test_verify_lei_dependency_inactive(mocker: MockerFixture):
@@ -75,6 +79,16 @@ def test_verify_user_lei_relation_invalid(normal_context: Tuple[AuthCredentials,
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
         verify_user_lei_relation(request, lei="TEST0LEI")
+    excpt = e.value
+    assert isinstance(excpt, RegTechHttpException)
+    assert excpt.status_code == HTTPStatus.FORBIDDEN
+
+
+def test_verify_user_lei_relation_unauthed(unauthed_context: Tuple[AuthCredentials, BaseUser]):
+    auth, user = unauthed_context
+    request = Request(scope={"auth": auth, "user": user, "type": "http"})
+    with pytest.raises(HTTPException) as e:
+        verify_user_lei_relation(request, lei="TESTLEI")
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -149,3 +163,13 @@ def test_verify_institution_search_no_param(normal_context: Tuple[AuthCredential
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
     assert excpt.detail == "Retrieving institutions without filter is forbidden."
+
+
+def test_verify_institution_search_unauthed(unauthed_context: Tuple[AuthCredentials, BaseUser]):
+    auth, user = unauthed_context
+    request = Request(scope={"auth": auth, "user": user, "type": "http"})
+    with pytest.raises(HTTPException) as e:
+        verify_institution_search(request)
+    excpt = e.value
+    assert isinstance(excpt, RegTechHttpException)
+    assert excpt.status_code == HTTPStatus.FORBIDDEN
