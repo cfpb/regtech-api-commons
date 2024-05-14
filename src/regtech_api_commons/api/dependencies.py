@@ -31,7 +31,7 @@ def verify_user_lei_relation(request: Request, *args, **kwargs) -> None:
             if is_admin(auth) or lei in user.institutions:
                 return
             else:
-                detail=f"LEI {lei} is not associated with the user."
+                detail = f"LEI {lei} is not associated with the user."
         raise RegTechHttpException(
             status_code=HTTPStatus.FORBIDDEN,
             name="Request Forbidden",

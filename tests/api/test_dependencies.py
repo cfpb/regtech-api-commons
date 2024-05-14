@@ -37,6 +37,7 @@ def admin_context() -> Tuple[AuthCredentials, AuthenticatedUser]:
         }
     )
 
+
 @pytest.fixture
 def unauthed_context() -> Tuple[AuthCredentials, BaseUser]:
     return AuthCredentials("unauthenticated"), UnauthenticatedUser()
