@@ -143,7 +143,7 @@ def test_associate_to_lei(mocker):
     assert result is None
 
 
-def test_associate_to_lei_invalid_lei():
+def test_associate_to_lei_invalid():
     with pytest.raises(Exception) as e:
         user_id = "test-id"
         lei = "TESTLEI"
