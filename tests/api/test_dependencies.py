@@ -131,14 +131,14 @@ def test_verify_institution_search_leis_invalid(normal_context: Tuple[AuthCreden
 def test_verify_institution_search_domain_valid(normal_context: Tuple[AuthCredentials, AuthenticatedUser]):
     auth, user = normal_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
-    verify_institution_search(request, domain="local.host")
+    verify_institution_search(request, leis=None, domain="local.host")
 
 
 def test_verify_institution_search_domain_invalid(normal_context: Tuple[AuthCredentials, AuthenticatedUser]):
     auth, user = normal_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request, domain="not_associated.domain")
+        verify_institution_search(request, leis=None, domain="not_associated.domain")
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -149,7 +149,7 @@ def test_verify_institution_search_no_user_email(normal_context: Tuple[AuthCrede
     user.email = ""
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request, domain="not_associated.domain")
+        verify_institution_search(request, leis=None, domain="not_associated.domain")
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -159,7 +159,7 @@ def test_verify_institution_search_no_param(normal_context: Tuple[AuthCredential
     auth, user = normal_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request)
+        verify_institution_search(request, leis=None)
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -170,7 +170,7 @@ def test_verify_institution_search_unauthed(unauthed_context: Tuple[AuthCredenti
     auth, user = unauthed_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request)
+        verify_institution_search(request, leis=None)
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
