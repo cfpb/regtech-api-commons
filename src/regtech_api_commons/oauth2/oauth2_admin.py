@@ -10,7 +10,7 @@ from keycloak import KeycloakAdmin, KeycloakOpenIDConnection, exceptions as kce
 
 from regtech_api_commons.models.auth import RegTechUser
 
-from regtech_api_commons.oauth2.config import KeycloakSettings
+from regtech_api_commons.oauth2.config import KeycloakSettings, regex_configs
 
 log = logging.getLogger(__name__)
 
@@ -84,15 +84,13 @@ class OAuth2Admin:
             raise HTTPException(status_code=e.response_code, detail="Failed to associate user to group")
 
     def associate_to_lei(self, user_id: str, lei: str) -> None:
-        group = self.get_group(lei)
-        group_id = group["id"] if group else self._admin.create_group({"name": lei})
-        if group_id:
-            self.associate_to_group(user_id, group_id)
+        if regex_configs.lei.regex.match(lei):
+            group = self.get_group(lei)
+            group_id = group["id"] if group else self._admin.create_group({"name": lei})
+            if group_id:
+                self.associate_to_group(user_id, group_id)
         else:
-            raise HTTPException(
-                status_code=HTTPStatus.BAD_REQUEST,
-                detail="No institution found for given LEI",
-            )
+            raise ValueError(f"Invalid lei {lei}. {regex_configs.lei.error_text}")
 
     def associate_to_leis(self, user_id: str, leis: Set[str]):
         for lei in leis:
