@@ -8,7 +8,7 @@ from fastapi.exceptions import HTTPException
 from pytest_mock import MockerFixture
 from starlette.authentication import AuthCredentials, UnauthenticatedUser, BaseUser
 
-from regtech_api_commons.api.dependencies import verify_institution_search, verify_lei, verify_user_lei_relation
+from regtech_api_commons.api.dependencies import parse_leis, verify_institution_search, verify_lei, verify_user_lei_relation
 from regtech_api_commons.api.exceptions import RegTechHttpException
 from regtech_api_commons.models.auth import AuthenticatedUser
 
@@ -174,3 +174,9 @@ def test_verify_institution_search_unauthed(unauthed_context: Tuple[AuthCredenti
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
+
+def test_parse_leis():
+    assert parse_leis(['lei1,lei2']) == ['lei1', 'lei2']
+    assert parse_leis(['lei1,lei2', 'lei3,lei4']) == ['lei1','lei2','lei3','lei4']
+    assert parse_leis([]) is None
+    assert parse_leis(None) is None
