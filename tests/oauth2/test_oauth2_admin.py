@@ -153,7 +153,7 @@ def test_associate_to_lei_invalid():
 
 def test_associate_to_leis(mocker):
     user_id = ("test-id",)
-    leis = Set["123456789TESTBANK123", "123456789TESTBANK234", "123456789TESTBANK345"]  # noqa: F821
+    leis = Set["123456789TESTBANK123", "123456789TESTBANK234", "123456789TESTBANK345"]  # noqa: F722
 
     associate_to_lei_mock = mocker.patch(
         "regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_lei", return_value=None
