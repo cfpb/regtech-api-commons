@@ -8,7 +8,12 @@ from fastapi.exceptions import HTTPException
 from pytest_mock import MockerFixture
 from starlette.authentication import AuthCredentials, UnauthenticatedUser, BaseUser
 
-from regtech_api_commons.api.dependencies import verify_institution_search, verify_lei, verify_user_lei_relation
+from regtech_api_commons.api.dependencies import (
+    parse_leis,
+    verify_institution_search,
+    verify_lei,
+    verify_user_lei_relation,
+)
 from regtech_api_commons.api.exceptions import RegTechHttpException
 from regtech_api_commons.models.auth import AuthenticatedUser
 
@@ -131,14 +136,14 @@ def test_verify_institution_search_leis_invalid(normal_context: Tuple[AuthCreden
 def test_verify_institution_search_domain_valid(normal_context: Tuple[AuthCredentials, AuthenticatedUser]):
     auth, user = normal_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
-    verify_institution_search(request, domain="local.host")
+    verify_institution_search(request, leis=None, domain="local.host")
 
 
 def test_verify_institution_search_domain_invalid(normal_context: Tuple[AuthCredentials, AuthenticatedUser]):
     auth, user = normal_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request, domain="not_associated.domain")
+        verify_institution_search(request, leis=None, domain="not_associated.domain")
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -149,7 +154,7 @@ def test_verify_institution_search_no_user_email(normal_context: Tuple[AuthCrede
     user.email = ""
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request, domain="not_associated.domain")
+        verify_institution_search(request, leis=None, domain="not_associated.domain")
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -159,7 +164,7 @@ def test_verify_institution_search_no_param(normal_context: Tuple[AuthCredential
     auth, user = normal_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request)
+        verify_institution_search(request, leis=None)
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
@@ -170,7 +175,14 @@ def test_verify_institution_search_unauthed(unauthed_context: Tuple[AuthCredenti
     auth, user = unauthed_context
     request = Request(scope={"auth": auth, "user": user, "type": "http"})
     with pytest.raises(HTTPException) as e:
-        verify_institution_search(request)
+        verify_institution_search(request, leis=None)
     excpt = e.value
     assert isinstance(excpt, RegTechHttpException)
     assert excpt.status_code == HTTPStatus.FORBIDDEN
+
+
+def test_parse_leis():
+    assert parse_leis(["lei1,lei2"]) == ["lei1", "lei2"]
+    assert parse_leis(["lei1,lei2", "lei3,lei4"]) == ["lei1", "lei2", "lei3", "lei4"]
+    assert parse_leis([]) is None
+    assert parse_leis(None) is None
