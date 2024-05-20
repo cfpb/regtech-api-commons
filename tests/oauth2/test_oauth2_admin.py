@@ -4,7 +4,7 @@ from collections.abc import Set
 from unittest.mock import Mock
 from regtech_api_commons.models.auth import RegTechUser
 from regtech_api_commons.oauth2.oauth2_admin import KeycloakSettings, OAuth2Admin
-from regtech_api_commons.oauth2.config import regex_configs
+from regtech_regex.regex_config import RegexConfigs
 import jose.jwt
 
 kc_settings = KeycloakSettings(
@@ -144,11 +144,12 @@ def test_associate_to_lei(mocker):
 
 
 def test_associate_to_lei_invalid():
+    regex_configs = RegexConfigs.instance()
     with pytest.raises(Exception) as e:
         user_id = "test-id"
         lei = "TESTLEI"
         oauth2_admin.associate_to_lei(user_id=user_id, lei=lei)
-    assert f"Invalid lei TESTLEI. {regex_configs.lei.error_text}" in e.value.args
+    assert f"Invalid LEI TESTLEI. {regex_configs.lei.error_text}" in e.value.args
 
 
 def test_associate_to_leis(mocker):

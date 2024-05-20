@@ -6,7 +6,6 @@ from pydantic.networks import HttpUrl
 from pydantic.types import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_settings.sources import DotenvType, ENV_FILE_SENTINEL
-from regtech_regex.regex_config import RegexConfigs
 
 
 class KeycloakSettings(BaseSettings):
@@ -52,6 +51,3 @@ class KeycloakSettings(BaseSettings):
             for (key, value) in setting_variables
             if key.lower().startswith(self._jwt_opts_prefix)
         }
-
-
-regex_configs = RegexConfigs.instance()
