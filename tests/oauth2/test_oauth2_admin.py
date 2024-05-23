@@ -1,8 +1,10 @@
 from pytest_mock import MockerFixture
+import pytest
 from collections.abc import Set
 from unittest.mock import Mock
 from regtech_api_commons.models.auth import RegTechUser
 from regtech_api_commons.oauth2.oauth2_admin import KeycloakSettings, OAuth2Admin
+from regtech_regex.regex_config import RegexConfigs
 import jose.jwt
 
 kc_settings = KeycloakSettings(
@@ -129,7 +131,7 @@ def test_associate_to_group(mocker):
 
 def test_associate_to_lei(mocker):
     user_id = "test-id"
-    lei = "TESTLEI"
+    lei = "123456789TESTBANK123"
 
     mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
     mock_get_group.return_value = {"id": lei}
@@ -141,26 +143,18 @@ def test_associate_to_lei(mocker):
     assert result is None
 
 
-def test_associate_to_lei_not_seeded(mocker):
-    user_id = "test-id"
-    lei = "TESTLEI"
-
-    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
-    mock_get_group.return_value = None
-
-    mock_associate_to_group = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
-    mock_associate_to_group.return_value = None
-
-    mock_create_group = mocker.patch("keycloak.KeycloakAdmin.create_group")
-    mock_create_group.return_value = "test"
-
-    oauth2_admin.associate_to_lei(user_id=user_id, lei=lei)
-    mock_create_group.assert_called_with({"name": lei})
+def test_associate_to_lei_invalid():
+    regex_configs = RegexConfigs.instance()
+    with pytest.raises(Exception) as e:
+        user_id = "test-id"
+        lei = "TESTLEI"
+        oauth2_admin.associate_to_lei(user_id=user_id, lei=lei)
+    assert f"Invalid LEI TESTLEI. {regex_configs.lei.error_text}" in e.value.args
 
 
 def test_associate_to_leis(mocker):
     user_id = ("test-id",)
-    leis = Set["TESTLEI1", "TESTLEI2", "TESTLEI3"]  # noqa: F821
+    leis = Set["123456789TESTBANK123", "123456789TESTBANK234", "123456789TESTBANK345"]  # noqa: F722
 
     associate_to_lei_mock = mocker.patch(
         "regtech_api_commons.oauth2.oauth2_admin.OAuth2Admin.associate_to_lei", return_value=None
