@@ -1,7 +1,9 @@
+from keycloak import KeycloakError
 from pytest_mock import MockerFixture
 import pytest
 from collections.abc import Set
 from unittest.mock import Mock
+from regtech_api_commons.api.exceptions import RegTechHttpException
 from regtech_api_commons.models.auth import RegTechUser
 from regtech_api_commons.oauth2.oauth2_admin import KeycloakSettings, OAuth2Admin
 from regtech_regex.regex_config import RegexConfigs
@@ -57,21 +59,41 @@ def test_get_claims(mocker):
     assert actual_result == expected_result
 
 
-def test_update_user(mocker):
+def test_update_user(mocker: MockerFixture):
     mock_update_user = mocker.patch("keycloak.KeycloakAdmin.update_user")
-    mock_update_user.return_value = None
+    user_id = "test-user-id"
+    payload = {"Name": "Test"}
 
-    res = oauth2_admin.update_user(user_id="test-user-id", payload={"Name": "Test"})
-    assert res is None
-
-    mock_get_user = mocker.patch("keycloak.KeycloakAdmin.get_user")
-    mock_get_user.return_value = {"Name": "Test"}
-
-    user = oauth2_admin._admin.get_user(user_id="test-user-id")
-    assert user["Name"] == "Test"
+    oauth2_admin.update_user(user_id=user_id, payload=payload)
+    mock_update_user.assert_called_once_with(user_id, payload)
 
 
-def test_upsert_group(mocker):
+def test_update_user_failure(mocker: MockerFixture):
+    mock_update_user = mocker.patch("keycloak.KeycloakAdmin.update_user")
+    kce_code = 500
+    mock_update_user.side_effect = KeycloakError("test", kce_code)
+    log_mock = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.log")
+    with pytest.raises(RegTechHttpException) as e:
+        oauth2_admin.update_user("test", {"foo": "bar"})
+    log_mock.exception.assert_called()
+    assert e.value.status_code == kce_code
+
+
+def test_upsert_group_new(mocker: MockerFixture):
+    lei = "TESTLEI"
+    name = "Test Name"
+
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
+    mock_get_group.return_value = None
+
+    mock_update_group = mocker.patch("keycloak.KeycloakAdmin.create_group")
+    mock_update_group.return_value = lei
+
+    result = oauth2_admin.upsert_group(lei=lei, name=name)
+    assert result == lei
+
+
+def test_upsert_group_existing(mocker: MockerFixture):
     lei = "TESTLEI"
     name = "Test Name"
 
@@ -83,6 +105,25 @@ def test_upsert_group(mocker):
 
     result = oauth2_admin.upsert_group(lei=lei, name=name)
     assert result == lei
+
+
+def test_upsert_group_failure(mocker: MockerFixture):
+    lei = "TESTLEI"
+    name = "Test Name"
+    kce_code = 500
+
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
+    mock_get_group.return_value = {"id": lei, "Name": name}
+
+    mock_update_group = mocker.patch("keycloak.KeycloakAdmin.update_group")
+    mock_update_group.side_effect = KeycloakError("test", response_code=kce_code)
+
+    log_mock = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.log")
+
+    with pytest.raises(RegTechHttpException) as e:
+        oauth2_admin.upsert_group(lei=lei, name=name)
+    log_mock.exception.assert_called()
+    assert e.value.status_code == kce_code
 
 
 def test_get_user(mocker: MockerFixture):
@@ -118,15 +159,31 @@ def test_get_group(mocker):
     assert result["Name"] == name
 
 
-def test_associate_to_group(mocker):
+def test_associate_to_group(mocker: MockerFixture):
     user_id = "test-id"
     group_id = "group-id"
 
     mock_group_user_add = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
-    mock_group_user_add.return_value = None
 
-    result = oauth2_admin.associate_to_group(user_id=user_id, group_id=group_id)
-    assert result is None
+    oauth2_admin.associate_to_group(user_id=user_id, group_id=group_id)
+    mock_group_user_add.assert_called_with(user_id, group_id)
+
+
+def test_associate_to_group_failure(mocker: MockerFixture):
+    user_id = "test-id"
+    group_id = "group-id"
+    kce_code = 500
+
+    mock_group_user_add = mocker.patch("keycloak.KeycloakAdmin.group_user_add")
+    mock_group_user_add.side_effect = KeycloakError("test", response_code=kce_code)
+
+    log_mock = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.log")
+
+    with pytest.raises(RegTechHttpException) as e:
+        oauth2_admin.associate_to_group(user_id=user_id, group_id=group_id)
+
+    log_mock.exception.assert_called()
+    assert e.value.status_code == kce_code
 
 
 def test_associate_to_lei(mocker):
