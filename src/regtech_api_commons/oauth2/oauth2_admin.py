@@ -54,7 +54,7 @@ class OAuth2Admin:
         try:
             self._admin.update_user(user_id, payload)
         except kce.KeycloakError as e:
-            log.exception("Failed to update user: %s", user_id, extra=payload)
+            log.exception("Failed to update user: %s", user_id)
             raise HTTPException(status_code=e.response_code, detail="Failed to update user")
 
     def upsert_group(self, lei: str, name: str) -> str:

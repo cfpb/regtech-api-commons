@@ -14,7 +14,7 @@ ERROR_DETAIL = "error_detail"
 
 
 async def regtech_http_exception_handler(request: Request, exception: RegTechHttpException) -> JSONResponse:
-    log.error(exception, exc_info=True, stack_info=True)
+    log.exception("Handling RegTechHttpException.")
     return JSONResponse(
         status_code=exception.status_code,
         content={ERROR_NAME: exception.name, ERROR_DETAIL: str(exception.detail)},
@@ -22,7 +22,7 @@ async def regtech_http_exception_handler(request: Request, exception: RegTechHtt
 
 
 async def request_validation_error_handler(request: Request, exception: RequestValidationError) -> JSONResponse:
-    log.warn(exception, exc_info=True, stack_info=True)
+    log.warning("Handling RequestValidationError.", exc_info=True)
     return JSONResponse(
         status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
         content={ERROR_NAME: "Request Validation Failure", ERROR_DETAIL: str(exception.errors())},
@@ -30,7 +30,7 @@ async def request_validation_error_handler(request: Request, exception: RequestV
 
 
 async def http_exception_handler(request: Request, exception: HTTPException) -> JSONResponse:
-    log.error(exception, exc_info=True, stack_info=True)
+    log.exception("Handling HTTPException.")
     status = HTTPStatus(exception.status_code)
     return JSONResponse(
         status_code=exception.status_code,
@@ -39,7 +39,7 @@ async def http_exception_handler(request: Request, exception: HTTPException) -> 
 
 
 async def general_exception_handler(request: Request, exception: Exception) -> JSONResponse:
-    log.error(exception, exc_info=True, stack_info=True)
+    log.exception("Handling General Exception.")
     return JSONResponse(
         status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
         content={ERROR_NAME: HTTPStatus.INTERNAL_SERVER_ERROR.phrase, ERROR_DETAIL: "server error"},

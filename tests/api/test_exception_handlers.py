@@ -25,7 +25,7 @@ def mock_request(mocker: MockerFixture) -> Request:
 
 
 async def test_regtech_http_exception_handler(mocker: MockerFixture, mock_request: Request):
-    error_log_spy = mocker.patch.object(exception_logger, "error")
+    exception_log_spy = mocker.patch.object(exception_logger, "exception")
     e = RegTechHttpException(HTTPStatus.INTERNAL_SERVER_ERROR, name="Test Exception", detail="test exception detail")
     response = await regtech_http_exception_handler(mock_request, e)
     assert response.status_code == e.status_code
@@ -33,7 +33,7 @@ async def test_regtech_http_exception_handler(mocker: MockerFixture, mock_reques
     assert content[ERROR_NAME] == e.name
     assert content[ERROR_DETAIL] == e.detail
     assert isinstance(content["error_detail"], str)
-    error_log_spy.assert_called_with(e, exc_info=True, stack_info=True)
+    exception_log_spy.assert_called()
 
 
 async def test_regtech_http_exception_handler_nested_detail(mock_request: Request):
