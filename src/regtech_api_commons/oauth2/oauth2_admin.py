@@ -3,11 +3,11 @@ from typing import Dict, Any, Set
 
 import jose.jwt
 import requests
-from fastapi import HTTPException
 
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection, exceptions as kce
 
 from regtech_api_commons.models.auth import RegTechUser
+from regtech_api_commons.api.exceptions import RegTechHttpException
 
 from regtech_api_commons.oauth2.config import KeycloakSettings
 from regtech_regex.regex_config import RegexConfigs
@@ -54,8 +54,8 @@ class OAuth2Admin:
         try:
             self._admin.update_user(user_id, payload)
         except kce.KeycloakError as e:
-            log.exception("Failed to update user: %s", user_id, extra=payload)
-            raise HTTPException(status_code=e.response_code, detail="Failed to update user")
+            log.exception("Failed to update user: %s", user_id)
+            raise RegTechHttpException(status_code=e.response_code, detail="Failed to update user")
 
     def upsert_group(self, lei: str, name: str) -> str:
         try:
@@ -68,7 +68,7 @@ class OAuth2Admin:
                 return group["id"]
         except kce.KeycloakError as e:
             log.exception("Failed to upsert group, lei: %s, name: %s", lei, name)
-            raise HTTPException(status_code=e.response_code, detail="Failed to upsert group")
+            raise RegTechHttpException(status_code=e.response_code, detail="Failed to upsert group")
 
     def get_group(self, lei: str) -> Dict[str, Any] | None:
         try:
@@ -81,7 +81,7 @@ class OAuth2Admin:
             self._admin.group_user_add(user_id, group_id)
         except kce.KeycloakError as e:
             log.exception("Failed to associate user %s to group %s", user_id, group_id)
-            raise HTTPException(status_code=e.response_code, detail="Failed to associate user to group")
+            raise RegTechHttpException(status_code=e.response_code, detail="Failed to associate user to group")
 
     def associate_to_lei(self, user_id: str, lei: str) -> None:
         regex_configs = RegexConfigs.instance()

@@ -1,6 +1,5 @@
 import logging
 from typing import Coroutine, Any, Dict, List, Tuple
-from fastapi import HTTPException
 from starlette.authentication import (
     AuthCredentials,
     AuthenticationBackend,
@@ -37,8 +36,8 @@ class BearerTokenAuthBackend(AuthenticationBackend):
                     + ["authenticated"]
                 )
                 return AuthCredentials(auths), AuthenticatedUser.from_claim(claims)
-        except HTTPException as e:
-            log.error("failed to get claims", e, exc_info=True, stack_info=True)
+        except Exception:
+            log.exception("failed to get claims")
         return AuthCredentials("unauthenticated"), UnauthenticatedUser()
 
     def extract_nested(self, data: Dict[str, Any], *keys: str) -> List[str]:
