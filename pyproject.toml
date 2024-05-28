@@ -13,7 +13,7 @@ requests = "^2.32.2"
 python-jose = "^3.3.0"
 python-keycloak = "^4.0.0"
 pydantic-settings = "^2.1.0"
-uvicorn = "^0.29.0"
+uvicorn = "^0.30.0"
 regtech-regex = {git = "https://github.com/cfpb/regtech-regex.git"}
 
 
