@@ -32,6 +32,17 @@ test = ["anyio[trio]", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypo
 trio = ["trio (>=0.23)"]
 
 [[package]]
+name = "async-property"
+version = "0.2.2"
+description = "Python decorator for async properties."
+optional = false
+python-versions = "*"
+files = [
+    {file = "async_property-0.2.2-py2.py3-none-any.whl", hash = "sha256:8924d792b5843994537f8ed411165700b27b2bd966cefc4daeefc1253442a9d7"},
+    {file = "async_property-0.2.2.tar.gz", hash = "sha256:17d9bd6ca67e27915a75d92549df64b5c7174e9dc806b30a3934dc4ff0506380"},
+]
+
+[[package]]
 name = "black"
 version = "24.4.2"
 description = "The uncompromising code formatter."
@@ -1175,18 +1186,20 @@ pycryptodome = ["pyasn1", "pycryptodome (>=3.3.1,<4.0.0)"]
 
 [[package]]
 name = "python-keycloak"
-version = "4.0.1"
+version = "4.1.0"
 description = "python-keycloak is a Python package providing access to the Keycloak API."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "python_keycloak-4.0.1-py3-none-any.whl", hash = "sha256:aa2402ecf6a3b23bb3163bb01f2bfbdf641886f6db15847b5047d67db805b351"},
-    {file = "python_keycloak-4.0.1.tar.gz", hash = "sha256:042185baae4910bd78de4bbbec87519a351b3024d19502f124bfda3090e1ec9a"},
+    {file = "python_keycloak-4.1.0-py3-none-any.whl", hash = "sha256:04af225cb5e8bcadb25604e215cd492b7e5ea36b0bffc2f77993e41462b1a470"},
+    {file = "python_keycloak-4.1.0.tar.gz", hash = "sha256:236501109afc828868157bf1560ddf7d19f81176feab53da4ac1c3d001f4453e"},
 ]
 
 [package.dependencies]
+async-property = ">=0.2.2"
 deprecation = ">=2.1.0"
-jwcrypto = ">=1.5.4,<2.0.0"
+httpx = ">=0.23.2"
+jwcrypto = ">=1.5.4"
 requests = ">=2.20.0"
 requests-toolbelt = ">=0.6.0"
 
@@ -1797,4 +1810,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "e4e85eec7b1afd44904f69b0581bfcd1e827062327d772d88f006830938181b8"
+content-hash = "0729a6428bca91e923b8a88b83d93ae01709044292b6aab898d21ea78d9df426"
