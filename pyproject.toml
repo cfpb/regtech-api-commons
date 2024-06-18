@@ -12,13 +12,13 @@ fastapi = "^0.111.0"
 requests = "^2.32.3"
 python-jose = "^3.3.0"
 python-keycloak = "^4.1.0"
-pydantic-settings = "^2.3.2"
+pydantic-settings = "^2.3.3"
 uvicorn = "^0.29.0"
 regtech-regex = {git = "https://github.com/cfpb/regtech-regex.git"}
 
 
 [tool.poetry.group.linters.dependencies]
-ruff = "^0.4.8"
+ruff = "^0.4.9"
 black = "^24.4.2"
 
 
