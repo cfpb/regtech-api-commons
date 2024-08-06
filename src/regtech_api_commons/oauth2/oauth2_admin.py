@@ -96,3 +96,9 @@ class OAuth2Admin:
     def associate_to_leis(self, user_id: str, leis: Set[str]):
         for lei in leis:
             self.associate_to_lei(user_id, lei)
+
+    def delete_group(self, lei: str) -> Dict[str, Any] | None:
+        try:
+            return self._admin.delete_group(lei)
+        except kce.KeycloakError:
+            return None

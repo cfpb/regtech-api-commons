@@ -221,3 +221,13 @@ def test_associate_to_leis(mocker):
 
     for lei in leis:
         associate_to_lei_mock.assert_called_with(user_id, lei)
+
+
+def test_delete_group(mocker):
+    lei = "TESTLEI"
+
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.delete_group")
+    mock_get_group.return_value = None
+
+    result = oauth2_admin.delete_group(lei)
+    assert result is None
