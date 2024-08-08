@@ -233,6 +233,7 @@ def test_delete_group(mocker):
     result = oauth2_admin.delete_group(lei)
     assert result is None
 
+    mock_get_group.side_effect = KeycloakError("test", response_code=kce_code)
     log_mock = mocker.patch("regtech_api_commons.oauth2.oauth2_admin.log")
 
     with pytest.raises(RegTechHttpException) as e:
