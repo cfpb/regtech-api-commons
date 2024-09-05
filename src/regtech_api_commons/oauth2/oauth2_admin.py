@@ -99,7 +99,8 @@ class OAuth2Admin:
 
     def delete_group(self, lei: str) -> Dict[str, Any] | None:
         try:
-            return self._admin.delete_group(lei)
+            group = self.get_group(lei)
+            return self._admin.delete_group(group["id"])
         except kce.KeycloakError as e:
-            log.exception("Failed to delete group, lei: %s", lei)
+            log.exception("Failed to delete group , lei: %s", lei)
             raise RegTechHttpException(status_code=e.response_code, detail="Failed to delete group")
