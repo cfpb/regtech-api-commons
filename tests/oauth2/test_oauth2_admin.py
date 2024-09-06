@@ -226,11 +226,15 @@ def test_associate_to_leis(mocker):
 def test_delete_group(mocker):
     lei = "TESTLEI"
     kce_code = 500
+    group_id = "test-id"
+
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
+    mock_get_group.return_value = {"id": group_id, "Name": lei}
 
     mock_get_group = mocker.patch("keycloak.KeycloakAdmin.delete_group")
     mock_get_group.return_value = None
 
-    result = oauth2_admin.delete_group(lei)
+    result = oauth2_admin.delete_group(mock_get_group["id"])
     assert result is None
 
     mock_get_group.side_effect = KeycloakError("test", response_code=kce_code)
