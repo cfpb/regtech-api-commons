@@ -16,6 +16,12 @@ app.include_router(router)
 client = TestClient(app)
 
 
+def test_healthcheck():
+    response = client.get("/healthcheck")
+    assert response.status_code == 200, response.text
+    assert response.json() == "Service is up."
+
+
 def test_get_api_route():
     response = client.get("/items/foo")
     assert response.status_code == 200, response.text

@@ -8,11 +8,10 @@ class Router(APIRouter):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    
-        @self.get('/healthcheck')
+
+        @self.get("/healthcheck")
         async def healthcheck():
             return "Service is up."
-
 
     def api_route(
         self, path: str, *, include_in_schema: bool = True, **kwargs: Any
