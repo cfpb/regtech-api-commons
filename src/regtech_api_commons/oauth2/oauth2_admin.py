@@ -41,8 +41,13 @@ class OAuth2Admin:
 
     def _get_keys(self) -> Dict[str, Any]:
         if self._keys is None:
-            response = requests.get(self._kc_settings.certs_url)
-            self._keys = response.json()
+            log.info(f"Making call to {self._kc_settings.certs_url}")
+            try:
+                response = requests.get(self._kc_settings.certs_url)
+                self._keys = response.json()
+                log.info(f"Keys: {self._keys}")
+            except Exception as e:
+                log.exception("Error getting keys: {str(e)}")
         return self._keys
 
     def get_user(self, user_id: str) -> RegTechUser:
