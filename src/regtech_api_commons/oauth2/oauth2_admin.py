@@ -30,7 +30,7 @@ class OAuth2Admin:
     def get_claims(self, token: str) -> Dict[str, str] | None:
         try:
             key = self._get_keys()
-            log.info(f"Keys: {self.key}")
+            log.info(f"Keys: {key}")
             return jose.jwt.decode(
                 token=token,
                 key=key,
