@@ -29,11 +29,9 @@ class OAuth2Admin:
 
     def get_claims(self, token: str) -> Dict[str, str] | None:
         try:
-            key = self._get_keys()
-            log.info(f"Keys: {key}")
             return jose.jwt.decode(
                 token=token,
-                key=key,
+                key=self._get_keys(),
                 issuer=self._kc_settings.kc_realm_url.unicode_string(),
                 audience=self._kc_settings.auth_client,
                 options=self._kc_settings._jwt_opts,
@@ -43,12 +41,8 @@ class OAuth2Admin:
 
     def _get_keys(self) -> Dict[str, Any]:
         if self._keys is None:
-            log.info(f"Making call to {self._kc_settings.certs_url}")
-            try:
-                response = requests.get(self._kc_settings.certs_url)
-                self._keys = response.json()
-            except Exception as e:
-                log.exception(f"Error getting keys: {str(e)}")
+            response = requests.get(self._kc_settings.certs_url)
+            self._keys = response.json()
         return self._keys
 
     def get_user(self, user_id: str) -> RegTechUser:
