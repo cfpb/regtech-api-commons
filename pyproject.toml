@@ -18,7 +18,7 @@ regtech-regex = {git = "https://github.com/cfpb/regtech-regex.git"}
 
 
 [tool.poetry.group.linters.dependencies]
-ruff = "^0.6.3"
+ruff = "^0.6.9"
 black = "^24.8.0"
 
 
