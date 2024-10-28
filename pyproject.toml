@@ -8,7 +8,7 @@ packages = [{include = "regtech_api_commons", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.115.2"
+fastapi = "^0.115.4"
 requests = "^2.32.3"
 python-jose = "^3.3.0"
 python-keycloak = "^4.3.0"
