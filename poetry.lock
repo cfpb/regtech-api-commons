@@ -886,13 +886,13 @@ pycryptodome = ["pyasn1", "pycryptodome (>=3.3.1,<4.0.0)"]
 
 [[package]]
 name = "python-keycloak"
-version = "4.7.0"
+version = "4.7.1"
 description = "python-keycloak is a Python package providing access to the Keycloak API."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "python_keycloak-4.7.0-py3-none-any.whl", hash = "sha256:1b8a3f8d43fc7c9e81abaf80f1fd2c808300b0675f490a5149078c132ce6be09"},
-    {file = "python_keycloak-4.7.0.tar.gz", hash = "sha256:9d6c3077906d13056959ce43494a0c333b88487c1659ddd164a06446b92a3445"},
+    {file = "python_keycloak-4.7.1-py3-none-any.whl", hash = "sha256:0fd0d56e8ec5c0b535c9191d31092364bb8e71668954f7f6a2fa7e7b592405ae"},
+    {file = "python_keycloak-4.7.1.tar.gz", hash = "sha256:a711a3c430694d9f6f3146fa00219c8158913fa4fe1a84e09e56c7e3725be1d1"},
 ]
 
 [package.dependencies]
@@ -1145,4 +1145,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "1bcc03b53c70fff684681b1599df3166ecdfdac3065f7acd90096c12d07681e4"
+content-hash = "ac4b6782cd1e73c3b0e04a1f987023c060720cf5c1b7c3aa1203dd815e4f4f8c"
