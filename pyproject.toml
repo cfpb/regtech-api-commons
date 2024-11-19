@@ -11,7 +11,7 @@ python = "^3.12"
 fastapi = "^0.115.5"
 requests = "^2.32.3"
 python-jose = "^3.3.0"
-python-keycloak = "^4.7.1"
+python-keycloak = "^4.7.2"
 pydantic-settings = "^2.4.0"
 uvicorn = "^0.32.0"
 regtech-regex = {git = "https://github.com/cfpb/regtech-regex.git"}
