@@ -10,7 +10,6 @@ packages = [{include = "regtech_api_commons", from = "src"}]
 python = "^3.12"
 fastapi = "^0.115.5"
 requests = "^2.32.3"
-python-jose = "^3.3.0"
 python-keycloak = "^4.7.3"
 pydantic-settings = "^2.4.0"
 uvicorn = "^0.32.1"
