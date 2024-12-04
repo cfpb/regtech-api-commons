@@ -15,9 +15,10 @@ ERROR_DETAIL = "error_detail"
 
 async def regtech_http_exception_handler(request: Request, exception: RegTechHttpException) -> JSONResponse:
     log.exception("Handling RegTechHttpException.")
+    detail = exception.detail if exception.show_raw_detail else str(exception.detail)
     return JSONResponse(
         status_code=exception.status_code,
-        content={ERROR_NAME: exception.name, ERROR_DETAIL: str(exception.detail)},
+        content={ERROR_NAME: exception.name, ERROR_DETAIL: detail},
     )
 
 

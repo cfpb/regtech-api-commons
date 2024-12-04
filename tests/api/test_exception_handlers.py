@@ -44,6 +44,16 @@ async def test_regtech_http_exception_handler_nested_detail(mock_request: Reques
     assert content[ERROR_DETAIL] == str({"foo": "bar"})
 
 
+async def test_regtech_http_exception_handler_show_raw_nested_detail(mock_request: Request):
+    e = RegTechHttpException(
+        HTTPStatus.INTERNAL_SERVER_ERROR, name="Test Exception", detail={"foo": "bar"}, show_raw_detail=True
+    )
+    response = await regtech_http_exception_handler(mock_request, e)
+    assert response.status_code == e.status_code
+    content = json.loads(response.body)
+    assert content[ERROR_DETAIL] == {"foo": "bar"}
+
+
 async def test_request_validation_error_handler(mock_request: Request):
     errors = [{"loc": "test1", "msg": "error1"}, {"loc": "test2", "msg": "error2"}]
     rve = RequestValidationError(errors=errors)
