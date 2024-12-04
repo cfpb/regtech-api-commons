@@ -30,6 +30,9 @@ class OAuth2Admin:
 
     def get_claims(self, token: str) -> Dict[str, str] | None:
         try:
+            # Get the key id from the token header, and use that to find
+            # the correct public key from Keycloak.  Then use the public key
+            # to decode the token and get the claims
             kid = jwt.get_unverified_header(token).get("kid")
             keys = self._get_keys()
             key = next((key for key in keys["keys"] if key["kid"] == kid), None)
