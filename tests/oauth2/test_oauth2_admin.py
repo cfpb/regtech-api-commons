@@ -7,7 +7,10 @@ from regtech_api_commons.api.exceptions import RegTechHttpException
 from regtech_api_commons.models.auth import RegTechUser
 from regtech_api_commons.oauth2.oauth2_admin import KeycloakSettings, OAuth2Admin
 from regtech_regex.regex_config import RegexConfigs
-import jose.jwt
+
+import base64
+import jwt
+from cryptography.hazmat.primitives.asymmetric import rsa
 
 kc_settings = KeycloakSettings(
     **{
@@ -19,44 +22,55 @@ kc_settings = KeycloakSettings(
         "auth_url": "http://localhost",
         "token_url": "http://localhost",
         "certs_url": "http://localhost",
-        "auth_client": "",
+        "auth_client": "regtech-client",
     }
 )
 oauth2_admin = OAuth2Admin(kc_settings)
 
 
 def test_get_claims(mocker):
-    token = "Test Token"
-    mock_key_value = "secret"
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+
+    token = jwt.encode(
+        {
+            "sub": "test-user",
+            "iss": "http://localhost/",
+            "aud": kc_settings.auth_client,
+            "options": kc_settings._jwt_opts,
+        },
+        private_key,
+        algorithm="RS256",
+        headers={"kid": "test-kid"},
+    )
+
+    public_key = private_key.public_key()
+    public_numbers = public_key.public_numbers()
+
+    jwk = {
+        "kty": "RSA",
+        "kid": "test-kid",
+        "use": "sig",
+        "n": base64.urlsafe_b64encode(
+            public_numbers.n.to_bytes((public_numbers.n.bit_length() + 7) // 8, "big")
+        ).decode("utf-8"),
+        "e": base64.urlsafe_b64encode(
+            public_numbers.e.to_bytes((public_numbers.e.bit_length() + 7) // 8, "big")
+        ).decode("utf-8"),
+    }
+    keys = {"keys": [jwk]}
 
     mock_resp = Mock()
     mock_resp.status_code = 200
     mock_resp.content = "CONTENT"
-    mock_resp.json = Mock(return_value=mock_key_value)
+    mock_resp.json = Mock(return_value=keys)
 
     mock_request = mocker.patch("requests.get", return_value=mock_resp)
-
-    claims = {
-        "token": token,
-        "iss": kc_settings.kc_realm_url.unicode_string(),
-        "audience": kc_settings.auth_client,
-        "options": kc_settings._jwt_opts,
-    }
-
-    encoded = jose.jwt.encode(claims=claims, key=mock_key_value, algorithm="HS256")
-
-    expected_result = jose.jwt.decode(
-        token=encoded,
-        key=mock_key_value,
-        issuer=kc_settings.kc_realm_url.unicode_string(),
-        audience=kc_settings.auth_client,
-        options=kc_settings._jwt_opts,
-    )
-
-    actual_result = oauth2_admin.get_claims(encoded)
+    actual_result = oauth2_admin.get_claims(token)
 
     mock_request.assert_called_with(kc_settings.certs_url)
-    assert actual_result == expected_result
+    print(f"{actual_result}")
+    assert actual_result["iss"] == "http://localhost/"
+    assert actual_result["aud"] == kc_settings.auth_client
 
 
 def test_update_user(mocker: MockerFixture):

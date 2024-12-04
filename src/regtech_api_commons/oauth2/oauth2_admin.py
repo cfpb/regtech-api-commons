@@ -1,7 +1,8 @@
 import logging
 from typing import Dict, Any, Set
 
-import jose.jwt
+import json
+import jwt
 import requests
 
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection, exceptions as kce
@@ -29,14 +30,22 @@ class OAuth2Admin:
 
     def get_claims(self, token: str) -> Dict[str, str] | None:
         try:
-            return jose.jwt.decode(
-                token=token,
-                key=self._get_keys(),
+            # Get the key id from the token header, and use that to find
+            # the correct public key from Keycloak.  Then use the public key
+            # to decode the token and get the claims
+            kid = jwt.get_unverified_header(token).get("kid")
+            keys = self._get_keys()
+            key = next((key for key in keys["keys"] if key["kid"] == kid), None)
+            if not key:
+                pass
+            return jwt.decode(
+                jwt=token,
+                key=jwt.PyJWK.from_json(json.dumps(key)),
                 issuer=self._kc_settings.kc_realm_url.unicode_string(),
                 audience=self._kc_settings.auth_client,
                 options=self._kc_settings._jwt_opts,
             )
-        except jose.ExpiredSignatureError:
+        except jwt.exceptions.ExpiredSignatureError:
             pass
 
     def _get_keys(self) -> Dict[str, Any]:
