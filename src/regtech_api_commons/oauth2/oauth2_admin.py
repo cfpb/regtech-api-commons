@@ -29,9 +29,14 @@ class OAuth2Admin:
 
     def get_claims(self, token: str) -> Dict[str, str] | None:
         try:
+            kid = jwt.get_unverified_header(token).get("kid")
+            keys = self._get_keys()
+            key = next((key for key in keys["keys"] if key["kid"] == kid), None)
+            if not key:
+                pass
             return jwt.decode(
                 jwt=token,
-                key=jwt.pyJWK.from_json(self._get_keys()),
+                key=jwt.PyJWK.from_json(json.dumps(key)),
                 issuer=self._kc_settings.kc_realm_url.unicode_string(),
                 audience=self._kc_settings.auth_client,
                 options=self._kc_settings._jwt_opts,
