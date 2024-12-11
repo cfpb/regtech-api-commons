@@ -10,7 +10,7 @@ packages = [{include = "regtech_api_commons", from = "src"}]
 python = "^3.12"
 fastapi = { version = "^0.115.6", extras = ["anyio=^4.4.0"]}
 requests = "^2.32.3"
-python-keycloak = "^4.7.3"
+python-keycloak = "^5.0.0"
 pydantic-settings = "^2.4.0"
 uvicorn = "^0.32.1"
 regtech-regex = {git = "https://github.com/cfpb/regtech-regex.git"}
