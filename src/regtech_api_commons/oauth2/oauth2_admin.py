@@ -81,7 +81,10 @@ class OAuth2Admin:
 
     def get_group(self, lei: str) -> Dict[str, Any] | None:
         try:
-            return self._admin.get_group_by_path(f"/{lei}")
+            log.info(f"Getting group by path /{lei}")
+            group = self._admin.get_group_by_path(f"/{lei}")
+            log.info(f"Group returned: {group}")
+            return group
         except kce.KeycloakError:
             log.exception("Failure to get_group_by_path")
             return None
