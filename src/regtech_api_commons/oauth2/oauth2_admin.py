@@ -83,6 +83,7 @@ class OAuth2Admin:
         try:
             return self._admin.get_group_by_path(f"/{lei}")
         except kce.KeycloakError:
+            log.exception("Failure to get_group_by_path")
             return None
 
     def associate_to_group(self, user_id: str, group_id: str) -> None:
