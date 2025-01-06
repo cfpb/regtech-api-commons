@@ -106,6 +106,12 @@ def test_upsert_group_new(mocker: MockerFixture):
     result = oauth2_admin.upsert_group(lei=lei, name=name)
     assert result == lei
 
+    mock_get_group = mocker.patch("keycloak.KeycloakAdmin.get_group_by_path")
+    mock_get_group.return_value = {"error": "Group path does not exist"}
+
+    result = oauth2_admin.upsert_group(lei=lei, name=name)
+    assert result == lei
+
 
 def test_upsert_group_existing(mocker: MockerFixture):
     lei = "TESTLEI"

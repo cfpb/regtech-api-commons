@@ -82,7 +82,7 @@ class OAuth2Admin:
     def get_group(self, lei: str) -> Dict[str, Any] | None:
         try:
             group = self._admin.get_group_by_path(f"/{lei}")
-            if "error" not in group:
+            if group and "error" not in group:
                 return group
             else:
                 log.error(f"Results from get_group_by_path: {group}")
