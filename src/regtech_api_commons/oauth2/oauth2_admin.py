@@ -82,10 +82,10 @@ class OAuth2Admin:
     def get_group(self, lei: str) -> Dict[str, Any] | None:
         try:
             group = self._admin.get_group_by_path(f"/{lei}")
-            if group and "error" not in group:
+            if group and "id" in group:
                 return group
             else:
-                log.error(f"Results from get_group_by_path: {group}")
+                log.error(f"Unexpected results from get_group_by_path: {group}")
                 return None
         except kce.KeycloakError:
             return None
