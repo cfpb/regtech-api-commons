@@ -8,7 +8,7 @@ packages = [{include = "regtech_api_commons", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = { version = "^0.115.6", extras = ["anyio=^4.4.0"]}
+fastapi = { version = "^0.115.7", extras = ["anyio=^4.4.0"]}
 requests = "^2.32.3"
 python-keycloak = "^5.1.1"
 pydantic-settings = "^2.4.0"
