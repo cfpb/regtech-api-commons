@@ -6,13 +6,13 @@
 |----------------------------------------------------- | -------: | -------: | -------: | -------: | ------: | --------: |
 | src/regtech\_api\_commons/api/dependencies.py        |       58 |        0 |       26 |        1 |     99% |  101->103 |
 | src/regtech\_api\_commons/api/exception\_handlers.py |       24 |        0 |        0 |        0 |    100% |           |
-| src/regtech\_api\_commons/api/exceptions.py          |        9 |        0 |        0 |        0 |    100% |           |
+| src/regtech\_api\_commons/api/exceptions.py          |        7 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/api/router\_wrapper.py     |       18 |        1 |        2 |        1 |     90% |        20 |
-| src/regtech\_api\_commons/models/auth.py             |       24 |        0 |        2 |        0 |    100% |           |
+| src/regtech\_api\_commons/models/auth.py             |       19 |        0 |        2 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/config.py           |       29 |        0 |        0 |        0 |    100% |           |
 | src/regtech\_api\_commons/oauth2/oauth2\_admin.py    |       86 |        5 |       14 |        3 |     92% |40, 48-49, 52->55, 90-91, 105->exit |
 | src/regtech\_api\_commons/oauth2/oauth2\_backend.py  |       34 |        1 |        8 |        2 |     93% |30, 32->41 |
-|                                            **TOTAL** |  **282** |    **7** |   **52** |    **7** | **96%** |           |
+|                                            **TOTAL** |  **275** |    **7** |   **52** |    **7** | **96%** |           |
 
 4 empty files skipped.
 
